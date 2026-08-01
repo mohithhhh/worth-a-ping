@@ -1,3 +1,4 @@
 caspian-sdk
 google-generativeai
 python-dotenv
+python-telegram-bot
