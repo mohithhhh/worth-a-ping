@@ -2,6 +2,9 @@
 
 An intelligent email-to-Telegram urgency filter that watches your inbox, judges each message for genuine urgency using AI, and proactively alerts you via Telegram only when something actually warrants an interruption.
 
+<img width="1254" height="1254" alt="ChatGPT Image Aug 1, 2026 at 09_35_41 PM" src="https://github.com/user-attachments/assets/47050b0d-ec76-406d-965d-7eee4b38a02f" />
+
+
 Built for people drowning in email who need their attention protected, not just their notifications filtered.
 
 ## Why This Needs Two Channels + Real Judgment
