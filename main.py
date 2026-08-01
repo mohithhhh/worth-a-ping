@@ -7,14 +7,27 @@ and proactively alerts via Telegram only for genuinely urgent messages.
 """
 
 import os
+import asyncio
 from dotenv import load_dotenv
 from caspian_sdk import CommClient
+from telegram import Bot
 import db
 import triage
 
 
 # Load environment variables
 load_dotenv()
+
+
+async def send_telegram_alert(bot_token: str, chat_id: str, message: str):
+    """Send a Telegram message using the Bot API directly."""
+    try:
+        bot = Bot(token=bot_token)
+        await bot.send_message(chat_id=chat_id, text=message, parse_mode='HTML')
+        return True
+    except Exception as e:
+        print(f" → Telegram API error: {e}")
+        return False
 
 
 def main():
@@ -26,11 +39,12 @@ def main():
     # Automatically reads CASPIAN_API_KEY and CASPIAN_BASE_URL from environment
     client = CommClient()
     
-    # Get my Telegram identifier for sending alerts
-    # This should be your Telegram username (with @) or chat ID
-    my_telegram = os.getenv("MY_TELEGRAM_HANDLE")
-    if not my_telegram:
-        print("⚠️  WARNING: MY_TELEGRAM_HANDLE not set in .env")
+    # Get Telegram credentials for sending alerts
+    telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+    telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID")
+
+    if not telegram_bot_token or not telegram_chat_id:
+        print("⚠️  WARNING: TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set in .env")
         print("   Alerts will be logged but not sent to Telegram")
     
     @client.on_message
@@ -48,7 +62,13 @@ def main():
         """
         
         # Extract message details
-        sender = message.sender
+        # sender might be a dict, so convert to string
+        sender_raw = message.sender
+        if isinstance(sender_raw, dict):
+            sender = sender_raw.get('address') or sender_raw.get('name') or str(sender_raw)
+        else:
+            sender = str(sender_raw)
+
         text = message.text
         conversation_id = message.conversation_id
         
@@ -78,25 +98,29 @@ def main():
         if is_urgent:
             print(f"[inbound] \"{preview}\" → ALERT", end="")
             
-            if my_telegram:
+            if telegram_bot_token and telegram_chat_id:
                 try:
-                    # Format the alert message
-                    alert_text = f"""🚨 Urgent message from {sender}:
+                    # Format the alert message with HTML formatting
+                    alert_text = f"""🚨 <b>Urgent message from {sender}</b>
 
 {text[:500]}{'...' if len(text) > 500 else ''}
 
 ━━━━━━━━━━━━━━━━
-💡 Why urgent: {reason}"""
-                    
-                    # Send to Telegram
-                    # The SDK docs show message.initiate() for cold-start channels.
-                    # For Telegram, we use the connected identity to send to ourselves.
-                    message.initiate(my_telegram, alert_text)
-                    
-                    print(" → Telegram sent")
-                    
-                    # Mark as alerted in database
-                    db.mark_alerted(message_id)
+💡 <i>Why urgent: {reason}</i>"""
+
+                    # Send to Telegram using Bot API directly
+                    success = asyncio.run(send_telegram_alert(
+                        telegram_bot_token,
+                        telegram_chat_id,
+                        alert_text
+                    ))
+
+                    if success:
+                        print(" → Telegram sent")
+                        # Mark as alerted in database
+                        db.mark_alerted(message_id)
+                    else:
+                        print(" → Telegram failed")
                     
                 except Exception as e:
                     print(f" → Telegram failed: {e}")

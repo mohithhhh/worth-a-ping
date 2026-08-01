@@ -2,10 +2,16 @@ import os
 import json
 import google.generativeai as genai
 from typing import Dict, Any, Tuple
+from dotenv import load_dotenv
 
+# Load environment variables first
+load_dotenv()
 
 # Configure Gemini
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    raise ValueError("GEMINI_API_KEY not found in environment. Please set it in your .env file")
+genai.configure(api_key=api_key)
 
 # Use a fast, cheap model suitable for classification
 # gemini-3.5-flash-lite is optimized for low-latency, cost-effective classification
