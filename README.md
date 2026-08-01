@@ -3,7 +3,7 @@
 An intelligent email-to-Telegram urgency filter that watches your inbox, judges each message for genuine urgency using AI, and proactively alerts you via Telegram only when something actually warrants an interruption.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/47050b0d-ec76-406d-965d-7eee4b38a02f" alt="ChatGPT Image" width="500">
+  <img src="https://github.com/user-attachments/assets/47050b0d-ec76-406d-965d-7eee4b38a02f" alt="ChatGPT Image" width="500" height='400'>
 </p>
 
 
