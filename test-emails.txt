@@ -1,0 +1,31 @@
+# Test Emails for Demo Recording
+
+## Test 1: URGENT Email
+To: agt-f7be77a95a3b6babe072aaa8-96acfb@agents.trycaspianai.com
+Subject: Production Emergency
+
+URGENT: The production database is completely offline. Users cannot login and we're losing customers. Need immediate assistance to restore service!
+
+---
+
+## Test 2: NON-URGENT Email
+To: agt-f7be77a95a3b6babe072aaa8-96acfb@agents.trycaspianai.com
+Subject: Lunch tomorrow?
+
+Hey! Are we still on for lunch tomorrow? Let me know what time works for you. Looking forward to catching up!
+
+---
+
+## Test 3: URGENT (Alternative)
+To: agt-f7be77a95a3b6babe072aaa8-96acfb@agents.trycaspianai.com
+Subject: Critical Security Alert
+
+SECURITY BREACH: Unauthorized access detected on admin panel. Multiple failed login attempts from unknown IPs. Please investigate immediately.
+
+---
+
+## Test 4: NON-URGENT (Alternative)
+To: agt-f7be77a95a3b6babe072aaa8-96acfb@agents.trycaspianai.com
+Subject: Newsletter signup
+
+Thanks for signing up for our weekly newsletter! You'll receive your first edition next Monday with tips and updates.
